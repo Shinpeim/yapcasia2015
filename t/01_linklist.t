@@ -5,7 +5,7 @@ use Test::More;
 use Data::LinkedList;
 
 subtest 'can initialize' => sub {
-  my $list = Data::LinkedList->new(1, Data::LinkedList::Nil);
+  my $list = Data::LinkedList->new({head => 1, tail => Data::LinkedList::Nil});
   isa_ok($list, 'Data::LinkedList');
 };
 
@@ -112,6 +112,20 @@ subtest 'eq returns false if any elements are not equivalent' => sub {
     ok( ! $list_a->eq($list_b), 'a not eq b' );
     ok( ! $list_b->eq($list_a), 'b not eq a' );
   }
+};
+
+subtest 'push returns new list which has pushed value at last' => sub {
+  my $list = Data::LinkedList::Nil->
+    push(3)->
+    push(2)->
+    push(1);
+
+  my $expected = Data::LinkedList::Nil->
+    unshift(1)->
+    unshift(2)->
+    unshift(3);
+
+  ok($list->eq($expected));
 };
 
 done_testing;

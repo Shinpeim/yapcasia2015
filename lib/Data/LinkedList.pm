@@ -11,21 +11,10 @@ has tail => (is => "ro", isa => 'Data::LinkedList');
 ###############
 # constants
 ###############
-my $nil = Data::LinkedList->new(head => undef, tail => undef);
+my $nil = Data::LinkedList->new({head => undef, tail => undef});
 sub Nil {
   $nil;
 }
-
-################
-# class methods
-################
-sub new {
-  my ($class, $head, $tail) = @_;
-  bless {
-    head => $head,
-    tail => $tail,
-  }, $class;
-};
 
 ###################
 # instance methods
@@ -35,7 +24,7 @@ sub new {
 # 定数時間で処理が終わる
 sub unshift {
   my ($self, $element) = @_;
-  Data::LinkedList->new($element, $self);
+  Data::LinkedList->new({head => $element, tail => $self});
 }
 
 # O(1)、どんなに長いリストに対してunshiftしても
@@ -77,6 +66,17 @@ sub eq {
   }
   else {
     $self->tail->eq($other->tail);
+  }
+}
+
+sub push {
+  my ($self, $element) = @_;
+
+  if ($self == Data::LinkedList::Nil) {
+    return Data::LinkedList->new({head => $element, tail => $self});
+  }
+  else {
+    return Data::LinkedList->new({head => $self->head, tail => $self->tail->push($element)});
   }
 }
 
