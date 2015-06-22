@@ -68,4 +68,50 @@ subtest 'at_index raises IndexError when given too large index' => sub {
   isa_ok($@, 'Data::Error::IndexError');
 };
 
+subtest 'eq returns true if all elements are equivalent' => sub {
+  my $list_a = Data::LinkedList::Nil->
+    unshift(3)->
+    unshift(2)->
+    unshift(1); # [1, 2, 3]
+
+  my $list_b = Data::LinkedList::Nil->
+    unshift(3)->
+    unshift(2)->
+    unshift(1); # [1, 2, 3]
+
+  ok($list_a->eq($list_b), 'a eq b');
+  ok($list_b->eq($list_a), 'b eq a');
+};
+
+subtest 'eq returns false if any elements are not equivalent' => sub {
+  subtest 'when same size but different elements' => sub {
+    my $list_a = Data::LinkedList::Nil->
+      unshift(3)->
+      unshift(2)->
+      unshift(1); # [1, 2, 3]
+
+    my $list_b = Data::LinkedList::Nil->
+      unshift(2)->
+      unshift(2)->
+      unshift(1); # [1, 2, 2]
+
+    ok( ! $list_a->eq($list_b), 'a not eq b' );
+    ok( ! $list_b->eq($list_a), 'b not eq a' );
+  };
+
+  subtest 'when different size' => sub {
+    my $list_a = Data::LinkedList::Nil->
+      unshift(2)->
+      unshift(1); # [1, 2]
+
+    my $list_b = Data::LinkedList::Nil->
+      unshift(2)->
+      unshift(2)->
+      unshift(1); # [1, 2, 3]
+
+    ok( ! $list_a->eq($list_b), 'a not eq b' );
+    ok( ! $list_b->eq($list_a), 'b not eq a' );
+  }
+};
+
 done_testing;

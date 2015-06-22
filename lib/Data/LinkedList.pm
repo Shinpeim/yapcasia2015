@@ -4,7 +4,8 @@ use warnings;
 use Class::Accessor "antlers";
 use Data::Error::IndexError;
 
-has head => (is => "ro");
+# 簡便のため、今回は要素はNumに限る
+has head => (is => "ro", isa => 'Num');
 has tail => (is => "ro", isa => 'Data::LinkedList');
 
 ###############
@@ -59,6 +60,24 @@ sub at_index {
   }
 
   _at_index_helper->($self, $index, 0)->head;
+}
+
+sub eq {
+  my ($self, $other) = @_;
+  if ($self == Data::LinkedList::Nil &&
+    $other == Data::LinkedList::Nil) {
+    return 1;
+  }
+  elsif ($self == Data::LinkedList::Nil ||
+    $other == Data::LinkedList::Nil) {
+    return
+  }
+  elsif ($self->head != $other->head) {
+    return
+  }
+  else {
+    $self->tail->eq($other->tail);
+  }
 }
 
 ##########
