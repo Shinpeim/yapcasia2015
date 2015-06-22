@@ -80,6 +80,21 @@ sub push {
   }
 }
 
+sub pop {
+  my ($self, $element) = @_;
+  if ($self == Data::LinkedList::Nil) {
+    die Data::Error::IndexError->new({message => "can't pop Nil"});
+  }
+  elsif ($self->tail == Data::LinkedList::Nil) {
+    return ($self->head, $self->tail);
+  }
+  else {
+    my ($last_element, $tail_popped_list) = $self->tail->pop;
+    my $new_list = Data::LinkedList->new({head => $self->head, tail => $tail_popped_list});
+    return ($last_element, $new_list);
+  }
+}
+
 ##########
 # private
 ##########

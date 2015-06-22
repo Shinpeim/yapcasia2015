@@ -128,4 +128,20 @@ subtest 'push returns new list which has pushed value at last' => sub {
   ok($list->eq($expected));
 };
 
+subtest 'pop returns last value and new list' => sub {
+  my $list = Data::LinkedList->Nil->
+    push(1)->
+    push(2)->
+    push(3);
+
+  my ($popped_value, $popped_list) = $list->pop;
+  is($popped_value, 3, 'popped_value');
+
+  my $expected = Data::LinkedList->Nil->
+    push(1)->
+    push(2);
+
+  ok($popped_list->eq($expected), 'popped_list');
+};
+
 done_testing;
