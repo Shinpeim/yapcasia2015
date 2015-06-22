@@ -7,12 +7,17 @@ use Data::Error::IndexError;
 has head => (is => "ro");
 has tail => (is => "ro", isa => 'Data::LinkedList');
 
+###############
+# constants
+###############
 my $nil = Data::LinkedList->new(head => undef, tail => undef);
-
 sub Nil {
   $nil;
 }
 
+################
+# class methods
+################
 sub new {
   my ($class, $head, $tail) = @_;
   bless {
@@ -20,6 +25,10 @@ sub new {
     tail => $tail,
   }, $class;
 };
+
+###################
+# instance methods
+###################
 
 # O(1)、どんなに長いリストに対してunshiftしても
 # 定数時間で処理が終わる
@@ -49,25 +58,27 @@ sub at_index {
     });
   }
 
-  my $helper; $helper = sub {
-    my ($list, $counter) = @_;
-
-    if ($list == Data::LinkedList::Nil) {
-      die Data::Error::IndexError->new({
-        message => "too large index",
-      });
-    };
-
-    if ( $counter == $index ) {
-      return $list;
-    }
-    else {
-      return $helper->($list->tail, $counter + 1);
-    }
-  };
-
-  $helper->($self, 0)->head;
+  _at_index_helper->($self, $index, 0)->head;
 }
 
+##########
+# private
+##########
+sub _at_index_helper {
+  my ($list, $index, $counter) = @_;
+
+  if ($list == Data::LinkedList::Nil) {
+    die Data::Error::IndexError->new({
+        message => "too large index",
+      });
+  };
+
+  if ( $counter == $index ) {
+    return $list;
+  }
+  else {
+    return _at_index_helper->($list->tail, $index, $counter + 1);
+  }
+}
 
 1;

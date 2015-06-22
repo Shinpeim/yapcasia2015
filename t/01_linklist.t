@@ -65,7 +65,6 @@ subtest 'at_index raises IndexError when given too large index' => sub {
     $list->at_index(3);
   };
 
-  print $@;
   isa_ok($@, 'Data::Error::IndexError');
 };
 
